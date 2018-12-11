@@ -1,0 +1,78 @@
+<div class="jumbotron text-center">
+  <h1>Hi, {{currentUser.username}}!</h1>
+</div>
+<div class="container-fluid text-center">
+<div class="row">
+  <div class="col-sm border border-danger">
+    <app-canvas [radius]="radius" [submitted]="submitted" [hits]="hits" [form]="f" [isClicked]="isClicked"></app-canvas>
+  </div>
+  <div class="col-sm border border-danger">
+    <form [formGroup]="form" (ngSubmit)="submit()" #f="ngForm">
+      <div>
+        <h4>Choose X: </h4>
+        <label formArrayName="validX" *ngFor="let x of form.get('validX')['controls']; let i = index"
+               class="form-check-inline" [ngClass]="{ 'is-invalid': submitted && form.controls.validX.errors}">
+          <input type="checkbox" [formControlName]="i">
+          {{validX[i].name}}
+        </label>
+
+        <div *ngIf="submitted && form.controls.validX.errors">One X must be selected!</div>
+      </div>
+      <div>
+        <h4>Choose Y:</h4>
+        <mat-card>
+          <mat-card-content>
+            <section style="border: black 2px solid; width: 184px">
+              <mat-form-field>
+                <input matInput type="number" formControlName="validY" max="5" min="-3"
+                       [ngClass]="{ 'is-invalid': submitted && form.controls.validY.errors}">
+              </mat-form-field>
+            </section>
+          </mat-card-content>
+        </mat-card>
+
+        <div *ngIf="submitted && form.controls.validY.errors">Y is invalid!</div>
+      </div>
+      <div>
+        <h4>Choose R: </h4>
+        <label formArrayName="validR" *ngFor="let r of form.get('validR')['controls']; let i = index"
+               class="form-check-inline" (change)="RadiusChange()"
+               [ngClass]="{ 'is-invalid': submitted && form.controls.validR.errors}">
+          <input type="checkbox" [formControlName]="i">
+          {{validR[i].name}}
+        </label>
+
+        <div *ngIf="submitted && form.controls.validR.errors">One R must be selected!</div>
+      </div>
+
+
+      <div class="form-group">
+        <button class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+  <!--</div>-->
+  <!--<div class="col-sm border border-danger">-->
+    <h4>Previous hits:</h4>
+    <table>
+      <thead>
+      <tr>
+        <th>X</th>
+        <th>Y</th>
+        <th>R</th>
+        <th>IsInArea</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let hit of hits">
+        <td>{{ hit.x }}</td>
+        <td>{{ hit.y }}</td>
+        <td>{{ hit.r }}</td>
+        <td>{{ hit.isInArea }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+<p><a [routerLink]="['/login']">Logout</a></p>
+
