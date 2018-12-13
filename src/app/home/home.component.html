@@ -1,12 +1,8 @@
-<div class="jumbotron text-center">
-  <h1>Hi, {{currentUser.username}}!</h1>
-</div>
-<div class="container-fluid text-center">
+<h1>Hi, {{currentUser.username}}!</h1>
 <div class="row">
-  <div class="col-sm border border-danger">
-    <app-canvas [radius]="radius" [submitted]="submitted" [hits]="hits" [form]="f" [isClicked]="isClicked"></app-canvas>
-  </div>
-  <div class="col-sm border border-danger">
+  <div class="media">
+  <div class="col-sm-4">
+    <app-canvas [radius]="radius" [submitted]="submitted" [hits]="hits" [form]="f" [isClicked]="isClicked" [isRadiusSet]="isRadiuseSet"></app-canvas>
     <form [formGroup]="form" (ngSubmit)="submit()" #f="ngForm">
       <div>
         <h4>Choose X: </h4>
@@ -50,17 +46,19 @@
         <button class="btn btn-primary">Submit</button>
       </div>
     </form>
-  <!--</div>-->
-  <!--<div class="col-sm border border-danger">-->
+
+</div>
+  </div>
+<div class="col-sm-8">
     <h4>Previous hits:</h4>
-    <table>
+    <table class="table table-hover">
       <thead>
-      <tr>
-        <th>X</th>
-        <th>Y</th>
-        <th>R</th>
-        <th>IsInArea</th>
-      </tr>
+        <tr>
+          <th>X</th>
+          <th>Y</th>
+          <th>R</th>
+          <th>IsInArea</th>
+        </tr>
       </thead>
       <tbody>
       <tr *ngFor="let hit of hits">
@@ -71,7 +69,6 @@
       </tr>
       </tbody>
     </table>
-  </div>
 </div>
 </div>
 <p><a [routerLink]="['/login']">Logout</a></p>

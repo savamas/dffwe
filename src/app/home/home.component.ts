@@ -8,6 +8,7 @@ import {first} from 'rxjs/operators';
 import {UserService} from '../services/user.service';
 import {AlertService} from '../services/alert.service';
 import {Hit} from '../models/hit';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +21,7 @@ export class HomeComponent implements AfterViewInit, OnInit {
   radius = 1;
   isClicked = false;
   hits: Hit[] = [];
+  isRadiuseSet = true;
 
   @ViewChild(CanvasComponent) canv;
 
@@ -46,7 +48,8 @@ export class HomeComponent implements AfterViewInit, OnInit {
   private tempY: number;
   constructor(private formBuilder: FormBuilder,
               private userService: UserService,
-              private alertService: AlertService) {
+              private alertService: AlertService,
+              private router: Router) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const controls = this.validX.map(c => new FormControl(false));
     const controls1 = this.validR.map(c => new FormControl(false));
@@ -68,11 +71,12 @@ export class HomeComponent implements AfterViewInit, OnInit {
       .map((v, i) => v ? this.validR[i].id : null)
       .filter(v => v !== null);
     if (selectedRadiuses.length === 1) {
-      this.canv.updateChart(selectedRadiuses[0], this.hits);
       this.radius = selectedRadiuses[0];
       this.canv.updateChart(this.radius, this.hits);
+      this.isRadiuseSet = true;
     } else {
       this.canv.clearChart();
+      this.isRadiuseSet = false;
     }
   }
 
@@ -84,6 +88,9 @@ export class HomeComponent implements AfterViewInit, OnInit {
     this.submitted = true;
 
     if (this.form.invalid) {
+      if (this.isRadiuseSet === false) {
+        this.alertService.error('Radius is not set!');
+      }
       return;
     }
 
@@ -120,6 +127,10 @@ export class HomeComponent implements AfterViewInit, OnInit {
             }
             this.loadAllHits();
             this.submitted = false;
+          },
+          error => {
+            this.alertService.error('Unauthorized because of long inactive', true);
+            this.router.navigate(['/login']);
           }
         );
   }
